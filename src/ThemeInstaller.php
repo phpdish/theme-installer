@@ -16,7 +16,8 @@ use Composer\Package\PackageInterface;
 class ThemeInstaller extends LibraryInstaller
 {
     /**
-     * 模板路径
+     * 模板路径.
+     *
      * @var string
      */
     const THEME_PATH = 'app/themes/';
@@ -28,11 +29,18 @@ class ThemeInstaller extends LibraryInstaller
     {
         $this->filesystem->ensureDirectoryExists(static::THEME_PATH);
 
-        return  static::THEME_PATH . $package->getPrettyName();
+        $name = $package->getPrettyName();
+
+        $rootPackage = $this->composer->getPackage()->getConfig();
+        if (isset($rootPackage['ignore-theme-vendor']) && true === $rootPackage['ignore-theme-vendor']) {
+            list(, $name) = explode('/', $name, 2);
+        }
+
+        return  static::THEME_PATH.$name;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function supports($packageType)
     {
