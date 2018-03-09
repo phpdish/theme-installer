@@ -8,7 +8,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace PHPDish\ThemeInstaller;
 
 use Composer\Installer\LibraryInstaller;
@@ -17,11 +16,19 @@ use Composer\Package\PackageInterface;
 class ThemeInstaller extends LibraryInstaller
 {
     /**
+     * 模板路径
+     * @var string
+     */
+    const THEME_PATH = 'app/themes/';
+
+    /**
      * {@inheritdoc}
      */
     public function getInstallPath(PackageInterface $package)
     {
-        return 'app/themes/' . $package->getPrettyName();
+        $this->filesystem->ensureDirectoryExists(static::THEME_PATH);
+
+        return  static::THEME_PATH . $package->getPrettyName();
     }
 
     /**
